@@ -1,14 +1,16 @@
 resource "azurerm_availability_set" "etcd" {
   name                = "etcd"
-  location            = "${azurerm_resource_group.ket.location}"
+  location            = "${var.azure_region}"
   resource_group_name = "${azurerm_resource_group.ket.name}"
   managed             = "true"
+  platform_update_domain_count = "${var.domain_count}"
+  platform_fault_domain_count  = "${var.domain_count}"
 }
 
 resource "azurerm_network_interface" "etcd" {
   count = "${var.etcd_count}"
   name                = "etcd-${count.index}"
-  location            = "East US"
+  location            = "${var.azure_region}"
   resource_group_name = "${azurerm_resource_group.ket.name}"
 
   ip_configuration {
@@ -22,7 +24,7 @@ resource "azurerm_network_interface" "etcd" {
 resource "azurerm_virtual_machine" "etcd" {
   count = "${var.etcd_count}"
   name                  = "etcd-${count.index}"
-  location              = "East US"
+  location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.ket.name}"
   network_interface_ids = ["${element(azurerm_network_interface.etcd.*.id, count.index)}"]
   vm_size               = "${var.etcd_vm_size}"
@@ -32,9 +34,9 @@ resource "azurerm_virtual_machine" "etcd" {
   delete_data_disks_on_termination = true
 
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    publisher = "${var.publisher}"
+    offer     = "${var.offer}"
+    sku       = "${var.sku}"
     version   = "latest"
   }
 

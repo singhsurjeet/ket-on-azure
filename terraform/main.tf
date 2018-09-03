@@ -4,20 +4,20 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "ket" {
   name     = "${var.azure_resource_group_name}"
-  location = "East US"
+  location = "${var.azure_region}"
 }
 
 resource "azurerm_virtual_network" "kubenet" {
   name                = "kubenet"
   address_space       = ["10.0.0.0/16"]
-  location            = "${azurerm_resource_group.ket.location}"
+  location            = "${var.azure_region}"
   resource_group_name = "${azurerm_resource_group.ket.name}"
 }
 
 # Required for cloud provider integration
 resource "azurerm_route_table" "ket" {
   name                = "kubernetes"
-  location            = "${azurerm_resource_group.ket.location}"
+  location            = "${var.azure_region}"
   resource_group_name = "${azurerm_resource_group.ket.name}"
 }
 

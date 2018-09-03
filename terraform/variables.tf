@@ -15,23 +15,23 @@ variable "azure_resource_group_name" {
 }
 
 variable "bastion_vm_size" {
-    default = "Standard_B2s"
+    default = "Standard_B1ms"
 }
 
 variable "etcd_count" {
-    default = 3
+    default = 1
 }
 
 variable "etcd_vm_size" {
-    default = "Standard_B2ms"
+    default = "Standard_B1s"
 }
 
 variable "master_count" {
-    default = 2
+    default = 1
 }
 
 variable "master_vm_size" {
-    default = "Standard_B2ms"
+    default = "Standard_B1ms"
 }
 
 variable "master_apiserver_port" {
@@ -43,5 +43,26 @@ variable "worker_count" {
 }
 
 variable "worker_vm_size" {
-    default = "Standard_B2ms"
+    default = "Standard_B1ms"
+}
+
+variable "azure_region" {
+    default = "ukwest"
+}
+
+variable "domain_count" {
+  default = "2"
+}
+#Image details
+
+variable "publisher" {
+    default = "RedHat"
+}
+
+variable "offer" {
+  default = "RHEL"
+}
+
+variable "sku" {
+  default = "7.3"
 }

@@ -1,8 +1,10 @@
 resource "azurerm_availability_set" "master" {
   name                = "master"
-  location            = "${azurerm_resource_group.ket.location}"
+  location            = "${var.azure_region}"
   resource_group_name = "${azurerm_resource_group.ket.name}"
   managed             = "true"
+  platform_update_domain_count = "${var.domain_count}"
+  platform_fault_domain_count = "${var.domain_count}"
 }
 
 resource "azurerm_network_security_group" "master" {
@@ -26,7 +28,7 @@ resource "azurerm_network_security_group" "master" {
 resource "azurerm_network_interface" "master" {
   count                     = "${var.master_count}"
   name                      = "master-${count.index}"
-  location                  = "East US"
+  location                  = "${var.azure_region}"
   resource_group_name       = "${azurerm_resource_group.ket.name}"
   network_security_group_id = "${azurerm_network_security_group.master.id}"
 
@@ -41,7 +43,7 @@ resource "azurerm_network_interface" "master" {
 resource "azurerm_virtual_machine" "master" {
   count = "${var.master_count}"
   name                  = "master-${count.index}"
-  location              = "East US"
+  location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.ket.name}"
   network_interface_ids = ["${element(azurerm_network_interface.master.*.id, count.index)}"]
   vm_size               = "${var.master_vm_size}"
@@ -51,9 +53,9 @@ resource "azurerm_virtual_machine" "master" {
   delete_data_disks_on_termination = true
 
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    publisher = "${var.publisher}"
+    offer     = "${var.offer}"
+    sku       = "${var.sku}"
     version   = "latest"
   }
 

@@ -1,14 +1,14 @@
 resource "azurerm_public_ip" "kube_api" {
   name                         = "kubernetes_api"
-  location                     = "${azurerm_resource_group.ket.location}"
+  location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.ket.name}"
   public_ip_address_allocation = "static"
   domain_name_label            = "kubernetes-api"
 }
 
 resource "azurerm_lb" "kubernetes" {
-  name                = "kubernetes-api"
-  location                     = "${azurerm_resource_group.ket.location}"
+  name                          = "kubernetes-api"
+  location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.ket.name}"
 
   frontend_ip_configuration {

@@ -1,14 +1,14 @@
 
 resource "azurerm_public_ip" "bastion" {
   name                         = "bastion"
-  location                     = "East US"
+  location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.ket.name}"
   public_ip_address_allocation = "static"
 }
 
 resource "azurerm_network_interface" "bastion" {
   name                      = "bastion"
-  location                  = "East US"
+  location                  = "${var.azure_region}"
   resource_group_name       = "${azurerm_resource_group.ket.name}"
   network_security_group_id = "${azurerm_network_security_group.bastion.id}"
 
@@ -42,7 +42,7 @@ resource "azurerm_network_security_group" "bastion" {
 
 resource "azurerm_virtual_machine" "bastion" {
   name                  = "bastion"
-  location              = "East US"
+  location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.ket.name}"
   network_interface_ids = ["${azurerm_network_interface.bastion.id}"]
   vm_size               = "${var.bastion_vm_size}"
@@ -51,9 +51,9 @@ resource "azurerm_virtual_machine" "bastion" {
   delete_data_disks_on_termination = true
 
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    publisher = "${var.publisher}"
+    offer     = "${var.offer}"
+    sku       = "${var.sku}"
     version   = "latest"
   }
 
