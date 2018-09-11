@@ -31,6 +31,19 @@ resource "azurerm_lb_rule" "kubeapi" {
   frontend_ip_configuration_name = "api"
 }
 
+resource "azurerm_lb_rule" "kubedashboard" {
+  name                    = "kubeapi-8001"
+  resource_group_name     = "${azurerm_resource_group.ket.name}"
+  loadbalancer_id         = "${azurerm_lb.kubernetes.id}"
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.kubeapi.id}"
+  probe_id                = "${azurerm_lb_probe.kubeapi.id}"
+
+  protocol                       = "tcp"
+  frontend_port                  = 8001
+  backend_port                   = 8001
+  frontend_ip_configuration_name = "api"
+}
+
 resource "azurerm_lb_probe" "kubeapi" {
   name                = "api-6443"
   resource_group_name = "${azurerm_resource_group.ket.name}"
