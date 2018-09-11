@@ -1,3 +1,10 @@
+resource "azurerm_public_ip" "worker" {
+  name                         = "worker"
+  location                     = "${var.azure_region}"
+  resource_group_name          = "${azurerm_resource_group.ket.name}"
+  public_ip_address_allocation = "static"
+}
+
 resource "azurerm_availability_set" "worker" {
   name                = "worker"
   location            = "${var.azure_region}"
